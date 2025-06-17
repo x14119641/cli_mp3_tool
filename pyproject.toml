@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "cli-mp3-tool"
+version = "0.1.0"
+description = "cli tool to build .m3u playlists"
+authors = ["x14119641 <daniel.gil.romero24@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+rich = "^14.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
