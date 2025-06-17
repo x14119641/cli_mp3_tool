@@ -3,6 +3,7 @@ import file_browser
 import playlist
 
 current_dir = Path.cwd()
+playlist = playlist.Playlist()
 
 
 def show_help():
@@ -34,7 +35,7 @@ def repl():
             if not cmd_line:
                 continue
             # Handle help
-            if cmd_line == "?" or cmd_line == help:
+            if cmd_line == "?" or cmd_line == "help":
                 show_help()
                 continue
             # Handle wildcard ? to show content in directory
@@ -47,11 +48,39 @@ def repl():
             if cmd == "ls":
                 file_browser.list_files(current_dir=current_dir)
             elif cmd == "cd":
-                current_dir = file_browser.change_dir(current_dir, args[0])
+                if args:
+                    path_input = " ".join(args).strip('"')
+                    current_dir = file_browser.change_dir(current_dir, path_input)
+                else:
+                    print("To use cd please: use <folder>")
             elif cmd == "pwd":
                 print(current_dir)
             elif cmd == "exit":
                 break
+            elif cmd == "add":
+                for arg in args:
+                    tracks_path = list(current_dir.glob(arg))
+                    if not tracks_path:
+                        print(f"Not match for : {arg}")
+                    for track_path in tracks_path:
+                        playlist.add(track_path)
+            elif cmd == "remove":
+                for arg in args:
+                    tracks_path = list(current_dir.glob(arg))
+                    if not tracks_path:
+                        print(f"Not match for : {arg}")
+                    for track_path in tracks_path:
+                        playlist.remove(track_path)
+            elif cmd == "list":
+                playlist.list()
+            elif cmd == "save":
+                if args: 
+                    output = current_dir /args[0]
+                    if not output.suffix:
+                        output = output.with_suffix('.m3u')
+                    playlist.save(output_path=output)
+                else:
+                    print("Something went wrong, try to use save <playlist_name>")
             else:
                 print("Unknown command")    
         except Exception as e:
