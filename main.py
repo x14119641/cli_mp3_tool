@@ -1,11 +1,16 @@
 from pathlib import Path
+from prompt_toolkit import prompt
+from prompt_toolkit.history import FileHistory, InMemoryHistory
+from file_completer import CustomFileCompleter
+from utils import resolve_paths
+import shlex
 import file_browser
 import playlist
 
 current_dir = Path.cwd()
 playlist = playlist.Playlist()
 
-
+#  C:\Users\danie\Documents\Soulseek Downloads\complete\spartano\(1992) En Directo A Todo Gas
 def show_help():
     print("""
 Available commands: (Well we are updating, this just an example)
@@ -27,10 +32,13 @@ Available commands: (Well we are updating, this just an example)
 
 def repl():
     global current_dir
-    
+    # history = FileHistory(".cli_history")
+    history = InMemoryHistory()
+
     while True:
         try:
-            cmd_line = input(f"[{current_dir} > ").strip()
+            completer = CustomFileCompleter(str(current_dir))
+            cmd_line = prompt(f"[{current_dir} > ", completer=completer, history=history, complete_while_typing=True)
             
             if not cmd_line:
                 continue
@@ -43,7 +51,8 @@ def repl():
                 print("Files and folders in current cirectory:")
                 file_browser.list_files(current_dir)
             
-            cmd, *args = cmd_line.split()
+            cmd_parts = shlex.split(cmd_line, posix=False)
+            cmd, *args = cmd_parts
             
             if cmd == "ls":
                 file_browser.list_files(current_dir=current_dir)
@@ -51,6 +60,7 @@ def repl():
                 if args:
                     path_input = " ".join(args).strip('"')
                     current_dir = file_browser.change_dir(current_dir, path_input)
+                    completer = CustomFileCompleter(str(current_dir)) # Refresh currentdir in compiler
                 else:
                     print("To use cd please: use <folder>")
             elif cmd == "pwd":
@@ -59,17 +69,11 @@ def repl():
                 break
             elif cmd == "add":
                 for arg in args:
-                    tracks_path = list(current_dir.glob(arg))
-                    if not tracks_path:
-                        print(f"Not match for : {arg}")
-                    for track_path in tracks_path:
+                    for track_path in resolve_paths(current_dir, arg):
                         playlist.add(track_path)
             elif cmd == "remove":
                 for arg in args:
-                    tracks_path = list(current_dir.glob(arg))
-                    if not tracks_path:
-                        print(f"Not match for : {arg}")
-                    for track_path in tracks_path:
+                    for track_path in resolve_paths(current_dir, arg):
                         playlist.remove(track_path)
             elif cmd == "list":
                 playlist.list()
