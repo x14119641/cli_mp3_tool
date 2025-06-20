@@ -11,6 +11,7 @@ This tool supports file matching to help you quickly build playsits:
 - Example:
     - `add track_*` -> Adds all files starging with `track_`.
     - `remove *.wag`-> Removes all files finishing with `.wag`.
+- You can add or remove more than one file, just separate them with a space
 
 ### Basic Commands
  Command |  Description |
@@ -23,8 +24,10 @@ This tool supports file matching to help you quickly build playsits:
 | `search <string>` | Search for filenames in the current cirectory containing the given string |
 | `pwd` | Show current working directory |
 | `TAB` key | Auto-complete paths like a real shell (`cd >tab>`) |
+| `<add or remove> exampleTAB` key | Shows files starting with the string 'example' |
 | `list` | Show all files in the playlist |
 | `save <name.m3u>` | Save the playlist to `. m3u` file |   
+| `clear` | Clears the current playlist in memory.  |   
 | `exit` | Exit the app |
 
 
@@ -34,7 +37,7 @@ But I will use my hifi mp3 reproductor (Fiio X1) thorough the jack 3.5 connectio
  Command |  Description |
 |-----|------|
 | `export <target_folder>` | Copies all files in the current playlist to a target folder in order. Adds numbering (`01_`,`02_`, etc) to perserve playback order. Ideal for copying to a USB or SD card. |  
-| `clear` | Clears the current playlist in memory.  |   
+
 | `load <name.m3u>` | Loads an existing .m3u playlist for editing or exporting. |
 | `help` or `?` | List all available commands and their descriptions. |
 | `info` | Shows the number of files, total size, total duration or other metadata if possible |   

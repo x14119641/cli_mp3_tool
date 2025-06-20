@@ -37,3 +37,6 @@ class Playlist:
                 line = track.name if relative else str(track.resolve())
                 f.write(f"{line}\n")
         print(f"Playlist saved in {output_path}!")
+        
+    def clear(self):
+        self.tracks = []

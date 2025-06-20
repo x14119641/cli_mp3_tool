@@ -77,6 +77,26 @@ def repl():
                         playlist.remove(track_path)
             elif cmd == "list":
                 playlist.list()
+            elif cmd == "clear":
+                playlist.clear()
+            elif cmd == "search":
+                if not args:
+                    print("Provide keyword to search")
+                    continue
+                
+                keyword = " ".join(args).lower()
+                matches = []
+                for path in current_dir.rglob("*"):
+                    if path.is_file() and path.suffix.lower() in file_browser.AUDIO_EXTENSIONS:
+                        if keyword in path.name.lower():
+                            matches.append(path.relative_to(current_dir))
+                            
+                if matches:
+                    for match in matches:
+                        print(f"🎵 {match}")
+                    print(f"Toal found: {len(matches)}")
+                else:
+                    print(f"No matching files found for string: {keyword}")                    
             elif cmd == "save":
                 if args: 
                     output = current_dir /args[0]
